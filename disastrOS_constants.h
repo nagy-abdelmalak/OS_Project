@@ -25,6 +25,12 @@
 #define DSOS_ERESOURCENOFD -11
 #define DSOS_ERESOURCECLOSE -12
 #define DSOS_ERESOURCEINUSE -13
+#define DSOS_EMQ_INVALID     -100  // id non valido
+#define DSOS_EMQ_FULL        -101  // coda piena
+#define DSOS_EMQ_EMPTY       -102  // coda vuota
+#define DSOS_EMQ_INUSE       -103  // destroy su coda ancora in uso
+#define DSOS_EMQ_NOMEM       -104  // memoria insufficiente
+#define DSOS_EMQ_EXISTS      -105  // coda già esistente (se usi nomi)
 
 // syscall numbers
 #define DSOS_MAX_SYSCALLS 32
@@ -49,3 +55,9 @@
 // scheduling
 #define ALPHA 0.5f
 #define INTERVAL 100 // milliseconds for timer tick
+
+// message queue
+#define DSOS_MQ_CREATE   20
+#define DSOS_MQ_SEND     21
+#define DSOS_MQ_RECEIVE  22
+#define DSOS_MQ_DESTROY  23

@@ -20,6 +20,7 @@ ListHead ready_list;
 ListHead waiting_list;
 ListHead zombie_list;
 ListHead timer_list;
+ListHead mq_list;       // message queue list
 
 // a resource can be a device, a file or an ipc thing
 ListHead resources_list;
@@ -176,6 +177,21 @@ void disastrOS_start(void (*f)(void*), void* f_args, char* logfile){
 
   syscall_vector[DSOS_CALL_SHUTDOWN]      = internal_shutdown;
   syscall_numarg[DSOS_CALL_SHUTDOWN]      = 0;
+
+
+  // message queue
+  syscall_vector[DSOS_MQ_CREATE] = internal_mq_create;
+  syscall_numarg[DSOS_MQ_CREATE] = 1;
+
+  syscall_vector[DSOS_MQ_SEND]    = internal_mq_send;
+  syscall_numarg[DSOS_MQ_SEND]    = 2;
+
+  syscall_vector[DSOS_MQ_RECEIVE] = internal_mq_receive;
+  syscall_numarg[DSOS_MQ_RECEIVE] = 2;
+
+  syscall_vector[DSOS_MQ_DESTROY] = internal_mq_destroy;
+  syscall_numarg[DSOS_MQ_DESTROY] = 1;
+
 
   // setup the scheduling lists
   running=0;
