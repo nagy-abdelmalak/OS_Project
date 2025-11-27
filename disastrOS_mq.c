@@ -110,10 +110,72 @@ void internal_mq_destroy(){
 
 //send
 void internal_mq_send(){
+    int mq_id = running->syscall_args[0];
+    int msg = running->syscall_args[1];
+
+    MsgQueue* mq = MsgQueue_by_id(mq_id);
+    if(!mq){
+        running->syscall_retvalue = DSOS_EMQ_INVALID;
+        return;
+    }
+
+    //Se la coda e' piena -> blocca sender
+    if(mq->curr_msgs >= mq->max_msgs){
+        running->status = Waiting;
+        List_insert(&mq->waiting_senders, mq->waiting_senders.last, (ListItem*) running);
+        internal_schedule();
+        return;
+    }
+
+    //Crea msg
+    MsgItem* m = malloc(sizeof(MsgItem));
+    m->payload = msg;
+    List_insert(&mq->messages, mq->messages.last, (ListItem*) m);
+    mq->curr_msgs++;
+
+    //Se esiste un receiver in attesa -> sveglialo
+    if(mq->waiting_receivers.first){
+        PCB* recevier = (PCB*) List_detach(&mq->waiting_receivers, mq->waiting_receivers.first);
+        recevier->status = Ready;
+        List_insert(&ready_list, ready_list.last, (ListItem*) recevier);
+    }
+
     running->syscall_retvalue = 0;
 }
 
 //receive
 void internal_mq_receive(){
+    int mq_id = running->syscall_args[0];
+    int* out = (int*) running->syscall_args[1];
+
+    MsgQueue* mq = MsgQueue_by_id(mq_id);
+    if(!mq){
+        running->syscall_retvalue = DSOS_EMQ_INVALID;
+        return;
+    }
+
+    //Se la coda e' vuota -> blocca receiver
+    if(mq->curr_msgs == 0){
+        running->status = Waiting;
+        List_insert(&mq->waiting_receivers, mq->waiting_receivers.last, (ListItem*) running);
+        internal_schedule();
+        return;
+    }
+
+    //Prendi un messaggio
+    MsgItem* m = (MsgItem*) mq->messages.first;
+    List_detach(&mq->messages, (ListItem*) m);
+    mq->curr_msgs--;
+
+    *out = m->payload;
+    free(m);
+
+    //Se esiste uno bloccato in send -> sveglialo
+    if(mq->waiting_senders.first){
+        PCB* sender = (PCB*) List_detach(&mq->waiting_senders, mq->waiting_senders.first);
+        sender->status = Ready;
+        List_insert(&ready_list, ready_list.last, (ListItem*) sender);
+    }
+
     running->syscall_retvalue = 0;
 }
