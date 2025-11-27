@@ -24,3 +24,9 @@ void internal_openResource();
 void internal_closeResource();
 
 void internal_destroyResource();
+
+// message queue
+void internal_mq_create();
+void internal_mq_send();
+void internal_mq_receive();
+void internal_mq_destroy();

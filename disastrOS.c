@@ -302,6 +302,22 @@ int disastrOS_destroyResource(int resource_id) {
   return disastrOS_syscall(DSOS_CALL_DESTROY_RESOURCE, resource_id);
 }
 
+// message queue user wrappers
+int disastrOS_mq_create(int max_msgs) {
+  return disastrOS_syscall(DSOS_MQ_CREATE, max_msgs);
+}
+
+int disastrOS_mq_send(int mq_id, void* msg) {
+  return disastrOS_syscall(DSOS_MQ_SEND, mq_id, msg);
+}
+
+int disastrOS_mq_recieve(int mq_id, void* out) {
+  return disastrOS_syscall(DSOS_MQ_RECEIVE, mq_id, out);
+}
+
+int disastrOS_mq_create(int mq_id) {
+  return disastrOS_syscall(DSOS_MQ_DESTROY, mq_id);
+}
 
 
 void disastrOS_printStatus(){

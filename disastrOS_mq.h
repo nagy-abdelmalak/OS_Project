@@ -4,7 +4,7 @@
 typedef struct MsgItem {
     ListItem list;
     void* payload; // il messaggio
-    int size
+    int size;
 } MsgItem;
 
 typedef struct MsgQueue {
