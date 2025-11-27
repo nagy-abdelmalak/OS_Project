@@ -99,7 +99,7 @@ void internal_mq_destroy(){
     }
 
     //Se ci sono processi in attesa -> errore
-    if(mq->waiting_senders.first || mq->waiting_receivers.first){
+    if(mq->curr_msgs > 0 || mq->waiting_senders.first || mq->waiting_receivers.first){
         running->syscall_retvalue = DSOS_EMQ_INUSE;
         return;
     }

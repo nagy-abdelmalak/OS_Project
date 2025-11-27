@@ -79,8 +79,6 @@ void setupSignals(void) {
 }
 
 
-
-
 int disastrOS_syscall(int syscall_num, ...) {
   assert(running); 
   va_list ap;
@@ -311,7 +309,7 @@ int disastrOS_mq_send(int mq_id, void* msg) {
   return disastrOS_syscall(DSOS_MQ_SEND, mq_id, msg);
 }
 
-int disastrOS_mq_recieve(int mq_id, void* out) {
+int disastrOS_mq_receive(int mq_id, void* out) {
   return disastrOS_syscall(DSOS_MQ_RECEIVE, mq_id, out);
 }
 

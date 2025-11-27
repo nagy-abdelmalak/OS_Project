@@ -3,8 +3,8 @@
 
 typedef struct MsgItem {
     ListItem list;
-    void* payload; // il messaggio
-    int size;
+    //void* payload; // il messaggio
+    int payload;
 } MsgItem;
 
 typedef struct MsgQueue {

@@ -69,7 +69,7 @@ void initFunction(void* args) {
 
 //mq_test
 void testMsgQueue(void* args) {
-    printf("\n=== TEST Message Queue: CREATE & DESTROY ===\n");
+    /*printf("\n=== TEST Message Queue: CREATE & DESTROY ===\n");
 
     MsgQueueList_print();
 
@@ -78,12 +78,37 @@ void testMsgQueue(void* args) {
     printf("Return mq_id = %d\n", mq_id);
     MsgQueueList_print();
 
-    printf("\n[2] Distruggo la MQ con id=10\n");
+    printf("\n[2] Distruggo la MQ con id=%d\n", mq_id);
     int res = disastrOS_mq_destroy(mq_id);
     printf("Return destroy = %d\n", res);
     MsgQueueList_print();
 
     printf("\nTest completato! Shutdown...\n");
+    disastrOS_shutdown();*/
+
+    int q = disastrOS_mq_create(3);
+    printf("Child: created mq id=%d\n", q);
+
+    disastrOS_mq_send(q, 123);
+    disastrOS_mq_send(q, 456);
+    disastrOS_mq_send(q, 789);
+
+    int x;
+    disastrOS_mq_receive(q, &x);
+    printf("Child: received %d\n", x);
+
+    disastrOS_mq_destroy(q);
+    printf("Child: destroyed mq\n");
+
+    disastrOS_exit(0);
+}
+
+void init(void* args) {
+    disastrOS_spawn(testMsgQueue, 0);
+
+    int retval;
+    disastrOS_wait(0, &retval);
+
     disastrOS_shutdown();
 }
 
@@ -101,7 +126,7 @@ int main(int argc, char** argv){
   disastrOS_start(initFunction, 0, logfilename);*/
 
   printf("=== Avvio disastrOS (test MQ) ===\n");
-  disastrOS_start(testMsgQueue, NULL, NULL);
+  disastrOS_start(init, 0, 0);
 
   return 0;
 }
