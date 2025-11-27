@@ -24,3 +24,63 @@ MsgQueue* MsgQueue_alloc(int max_msgs) {
 
     List_insert(&mq_list, mq_list.last, (ListItem*) mq);
 }
+
+void MsgQueue_free(MsgQueue* mq){
+    // libera i messaggi residui
+    MsgItem* m = (MsgItem*) mq->messages.first;
+    while(m) {
+        MsgItem* next = (MsgItem*) m->list.next;
+        List_detach(&mq->messages, (ListItem*) m);
+        free(m);
+        m = next;
+    }
+    // rimuove la MQ dalla lista globale
+    List_detach(&mq_list, (ListItem*) mq);
+    free(mq);
+}
+
+MsgQueue* MsgQueue_by_id(int id){
+    ListItem* it = mq_list.first;
+    while (it) {
+        MsgQueue* mq = (MsgQueue*) it;
+        if(mq->id == id)
+            return mq;
+        it = it->next;
+    }
+    return NULL;
+}
+
+/***********************
+ *  Internal syscalls
+ ***********************/
+//Create
+void internal_mq_create(){
+    int max_msgs = running->syscall_args[0];
+    MsgQueue* mq = MsgQueue_alloc(max_msgs);
+
+    if(!mq){
+        running->syscall_retvalue = DSOS_EMQ_NOMEM;
+        return;
+    }
+    running->syscall_retvalue = mq->id;
+}
+
+//Destroy
+void internal_mq_destroy(){
+    int mq_id = running->syscall_args[0];
+
+    MsgQueue* mq = MsgQueue_by_id(mq_id);
+    if(!mq){
+        running->syscall_retvalue = DSOS_EMQ_INVALID;
+        return;
+    }
+
+    //Se ci sono processi in attesa -> errore
+    if(mq->waiting_senders.first || mq->waiting_receivers.first){
+        running->syscall_retvalue = DSOS_EMQ_INUSE;
+        return;
+    }
+
+    MsgQueue_free(mq);
+    running->syscall_retvalue = 0;
+}

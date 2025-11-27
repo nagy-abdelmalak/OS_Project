@@ -17,7 +17,7 @@ extern ListHead resources_list; // resources
 extern ListHead timer_list;     //timers (concrete)
 extern volatile int disastrOS_time; //global time of disastrOS
 
-extern ListHead mq_list;
+extern ListHead mq_list; //list of message queues
 
 // a resource can be a device, a file or an ipc thing
 
