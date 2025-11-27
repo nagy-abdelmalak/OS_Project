@@ -30,7 +30,7 @@
 #define DSOS_EMQ_EMPTY       -102  // coda vuota
 #define DSOS_EMQ_INUSE       -103  // destroy su coda ancora in uso
 #define DSOS_EMQ_NOMEM       -104  // memoria insufficiente
-#define DSOS_EMQ_EXISTS      -105  // coda già esistente (se usi nomi)
+#define DSOS_EMQ_EXISTS      -105  // coda già esistente
 
 // syscall numbers
 #define DSOS_MAX_SYSCALLS 32

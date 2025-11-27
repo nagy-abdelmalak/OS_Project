@@ -315,7 +315,7 @@ int disastrOS_mq_recieve(int mq_id, void* out) {
   return disastrOS_syscall(DSOS_MQ_RECEIVE, mq_id, out);
 }
 
-int disastrOS_mq_create(int mq_id) {
+int disastrOS_mq_destroy(int mq_id) {
   return disastrOS_syscall(DSOS_MQ_DESTROY, mq_id);
 }
 

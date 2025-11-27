@@ -16,3 +16,13 @@ typedef struct MsgQueue {
     int curr_msgs;
     int id;                     // id della coda di riferimento
 } MsgQueue;
+
+//Print
+void MsgQueueList_print();
+
+
+// Wrapper
+int disastrOS_mq_create(int max_msgs);
+int disastrOS_mq_destroy(int id);
+int disastrOS_mq_send(int id, int msg);
+int disastrOS_mq_receive(int id, int* msg);

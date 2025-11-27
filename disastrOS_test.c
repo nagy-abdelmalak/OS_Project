@@ -4,6 +4,11 @@
 
 #include "disastrOS.h"
 
+//mq_test
+#include "disastrOS_mq.h"
+#include "disastrOS_globals.h"
+#include "linked_list.h"
+
 // we need this to handle the sleep state
 void sleeperFunction(void* args){
   printf("Hello, I am the sleeper, and I sleep %d\n",disastrOS_getpid());
@@ -62,8 +67,28 @@ void initFunction(void* args) {
   disastrOS_shutdown();
 }
 
+//mq_test
+void testMsgQueue(void* args) {
+    printf("\n=== TEST Message Queue: CREATE & DESTROY ===\n");
+
+    MsgQueueList_print();
+
+    printf("\n[1] Creo la MQ con id=10, max_msgs=5\n");
+    int mq_id = disastrOS_mq_create(5);
+    printf("Return mq_id = %d\n", mq_id);
+    MsgQueueList_print();
+
+    printf("\n[2] Distruggo la MQ con id=10\n");
+    int res = disastrOS_mq_destroy(mq_id);
+    printf("Return destroy = %d\n", res);
+    MsgQueueList_print();
+
+    printf("\nTest completato! Shutdown...\n");
+    disastrOS_shutdown();
+}
+
 int main(int argc, char** argv){
-  char* logfilename=0;
+  /*char* logfilename=0;
   if (argc>1) {
     logfilename=argv[1];
   }
@@ -73,6 +98,10 @@ int main(int argc, char** argv){
   printf("the function pointer is: %p", childFunction);
   // spawn an init process
   printf("start\n");
-  disastrOS_start(initFunction, 0, logfilename);
+  disastrOS_start(initFunction, 0, logfilename);*/
+
+  printf("=== Avvio disastrOS (test MQ) ===\n");
+  disastrOS_start(testMsgQueue, NULL, NULL);
+
   return 0;
 }

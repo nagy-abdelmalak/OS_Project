@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include "disastrOS.h"
 #include "disastrOS_mq.h"
 #include "disastrOS_pcb.h"
@@ -16,13 +17,12 @@ MsgQueue* MsgQueue_alloc(int max_msgs) {
 
     mq->max_msgs = max_msgs;
     mq->curr_msgs = 0;
-    mq->id = ++last_mq_id;
 
     List_init(&mq->messages);
     List_init(&mq->waiting_senders);
     List_init(&mq->waiting_receivers);
 
-    List_insert(&mq_list, mq_list.last, (ListItem*) mq);
+    return mq;
 }
 
 void MsgQueue_free(MsgQueue* mq){
@@ -50,18 +50,41 @@ MsgQueue* MsgQueue_by_id(int id){
     return NULL;
 }
 
+void MsgQueueList_print() {
+    printf("Message Queues: [");
+    ListItem* aux = mq_list.first;
+    while (aux) {
+        MsgQueue* mq = (MsgQueue*) aux;
+        printf("(id=%d, max=%d, num_msgs=%d)",
+               mq->id,
+               mq->max_msgs,
+               mq->curr_msgs);
+        aux = aux->next;
+        if (aux) printf(", ");
+    }
+    printf("]\n");
+}
+
 /***********************
  *  Internal syscalls
  ***********************/
 //Create
 void internal_mq_create(){
     int max_msgs = running->syscall_args[0];
-    MsgQueue* mq = MsgQueue_alloc(max_msgs);
 
+    /*if(MsgQueue_by_id(mq_id)){
+        running->syscall_retvalue = DSOS_EMQ_EXISTS;
+        return;
+    }*/
+
+    MsgQueue* mq = MsgQueue_alloc(max_msgs);
     if(!mq){
         running->syscall_retvalue = DSOS_EMQ_NOMEM;
         return;
     }
+
+    mq->id = ++last_mq_id;
+    List_insert(&mq_list, mq_list.last, (ListItem*) mq);
     running->syscall_retvalue = mq->id;
 }
 
@@ -82,5 +105,15 @@ void internal_mq_destroy(){
     }
 
     MsgQueue_free(mq);
+    running->syscall_retvalue = 0;
+}
+
+//send
+void internal_mq_send(){
+    running->syscall_retvalue = 0;
+}
+
+//receive
+void internal_mq_receive(){
     running->syscall_retvalue = 0;
 }
