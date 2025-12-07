@@ -25,7 +25,7 @@
 #define DSOS_ERESOURCENOFD -11
 #define DSOS_ERESOURCECLOSE -12
 #define DSOS_ERESOURCEINUSE -13
-#define DSOS_EMQ_INVALID     -100  // id non valido
+#define DSOS_EMQ_INVALID     -100  // non valido
 #define DSOS_EMQ_FULL        -101  // coda piena
 #define DSOS_EMQ_EMPTY       -102  // coda vuota
 #define DSOS_EMQ_INUSE       -103  // destroy su coda ancora in uso
@@ -61,3 +61,7 @@
 #define DSOS_MQ_SEND     21
 #define DSOS_MQ_RECEIVE  22
 #define DSOS_MQ_DESTROY  23
+
+// blocking/wake (for test purposes)
+#define DSOS_CALL_BLOCK 24
+#define DSOS_CALL_WAKE  25

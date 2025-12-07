@@ -92,4 +92,11 @@ void internal_exit(){
     next_running->status=Running;
     running=next_running;
   }
+
+  // // per ogni mq nella mq_list:
+  // ListItem* it = mq_list.first;
+  // while(it){
+  //   MsgQueue_free((MsgQueue*) it);
+  //   it = it->next;
+  // }
 }

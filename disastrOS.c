@@ -305,11 +305,11 @@ int disastrOS_mq_create(int max_msgs) {
   return disastrOS_syscall(DSOS_MQ_CREATE, max_msgs);
 }
 
-int disastrOS_mq_send(int mq_id, void* msg) {
+int disastrOS_mq_send(int mq_id, int msg) {
   return disastrOS_syscall(DSOS_MQ_SEND, mq_id, msg);
 }
 
-int disastrOS_mq_receive(int mq_id, void* out) {
+int disastrOS_mq_receive(int mq_id, int* out) {
   return disastrOS_syscall(DSOS_MQ_RECEIVE, mq_id, out);
 }
 

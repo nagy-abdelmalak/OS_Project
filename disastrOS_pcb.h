@@ -3,6 +3,7 @@
 #include "disastrOS_constants.h"
 #include "linked_list.h"
 #include "disastrOS_timer.h"
+#include "disastrOS_mq.h"
 
 typedef enum ProcessStatus {Invalid=-1,
 			    Created=0x0,
@@ -72,6 +73,9 @@ void PCBList_print(ListHead* head);
 typedef struct PCBPtr{
   ListItem list;
   PCB* pcb;
+
+  MsgItem* pending_msg;   // se questo PCBPtr rappresenta un sender bloccato -> possiede il MsgItem da inserire
+  int* pending_out;              // se questo PCBPtr rappresenta un receiver bloccato -> dove scrivere il valore ricevuto
 } PCBPtr;
 
 // allocates a list item whose data field

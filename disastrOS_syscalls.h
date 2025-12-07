@@ -30,3 +30,7 @@ void internal_mq_create();
 void internal_mq_send();
 void internal_mq_receive();
 void internal_mq_destroy();
+
+// blocking/wake (for test purposes)
+void internal_block();
+void internal_wake();
