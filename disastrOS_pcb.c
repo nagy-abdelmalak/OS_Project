@@ -66,10 +66,6 @@ PCBPtr* PCBPtr_alloc(PCB* pcb) {
   pcb_ptr->list.prev=0;
   pcb_ptr->list.next=0;
   pcb_ptr->pcb=pcb;
-
-  /* inizializza i campi per mq */
-  pcb_ptr->pending_msg = NULL;
-  pcb_ptr->pending_out = NULL;
   return pcb_ptr;
 }
 

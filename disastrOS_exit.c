@@ -93,10 +93,5 @@ void internal_exit(){
     running=next_running;
   }
 
-  // // per ogni mq nella mq_list:
-  // ListItem* it = mq_list.first;
-  // while(it){
-  //   MsgQueue_free((MsgQueue*) it);
-  //   it = it->next;
-  // }
+  //internal_mq_destroy(); // clean up message queues opened by the process
 }
