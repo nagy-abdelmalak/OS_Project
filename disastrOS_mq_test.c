@@ -2,9 +2,9 @@
 #include "disastrOS.h"
 #include "disastrOS_mq.h"
 
-#define NUM_PRODUCERS 5
-#define NUM_CONSUMERS 5
-#define MSG_PER_PRODUCER 10
+#define NUM_PRODUCERS 10
+#define NUM_CONSUMERS 10
+#define MSG_PER_PRODUCER 20
 
 /* done queue id — children will notify init when they finish */
 static int done_mq = 0;
@@ -44,7 +44,7 @@ void consumer(void* args) {
   disastrOS_exit(0);
 }
 
-/* System idle process — keeps ready list non-empty */
+/* Evitare che la ready_list diventi vuota con idle*/
 void idle(void* args) {
   while (1) {
     disastrOS_preempt();
